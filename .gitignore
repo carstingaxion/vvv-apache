@@ -7,7 +7,7 @@
 /.vagrant
 
 # This is a file intended for hooking in a custom Vagrant configuration on up
-/Customfile
+#/Customfile
 
 # Allow for custom provisioning scripts that are not included with the repo
 /provision/provision-custom.sh

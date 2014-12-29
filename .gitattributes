@@ -2,3 +2,25 @@
 
 # Force provisioning script to use LF, even on Windows
 *.sh    eol=lf
+
+*.sh eol=lf
+*.conf eol=lf
+*.cnf eol=lf
+*.ini eol=lf
+*.php eol=lf
+*.sample eol=lf
+
+apt-source-append.list eol=lf
+bash_aliases eol=lf
+bash_profile eol=lf
+subversion-servers eol=lf
+vimrc eol=lf
+
+db_backup eol=lf
+develop_git eol=lf
+makepot eol=lf
+vagrant_destroy eol=lf
+vagrant_halt eol=lf
+vagrant_suspend eol=lf
+xdebug_off eol=lf
+xdebug_on eol=lf

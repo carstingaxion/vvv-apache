@@ -12,14 +12,110 @@ Vagrant.configure("2") do |config|
 
   # Configurations from 1.0.x can be placed in Vagrant 1.1.x specs like the following.
   config.vm.provider :virtualbox do |v|
-    v.customize ["modifyvm", :id, "--memory", 512]
+    v.customize ["modifyvm", :id, "--memory", 1024]
   end
 
-  # Forward Agent
+
+  # Default Box IP Address
   #
-  # Enable agent forwarding on vagrant ssh commands. This allows you to use identities
-  # established on the host machine inside the guest. See the manual for ssh-add
+  # This is the IP address that your host will communicate to the guest through. In the
+  # case of the default `192.168.50.4` that we've provided, VirtualBox will setup another
+  # network adapter on your host machine with the IP `192.168.50.1` as a gateway.
+  #
+  # If you are already on a network using the 192.168.50.x subnet, this should be changed.
+  # If you are running more than one VM through VirtualBox, different subnets should be used
+  # for those as well. This includes other Vagrant boxes.
+  
+  # 14.12.14 14:18
+  config.vm.network :private_network, ip: "192.168.50.4"
+  #config.vm.network :public_network
+  
+  #config.vm.network :public_network, :bridge=>"Dell Wireless 1703 802.11b/g/n (2.4GHz)"
+  #config.vm.network "public_network", ip: "192.168.2.333"
+
+  
+  # Versuche xip.io zum Laufen zu bringen aber ohne Erfolg
+
+  #config.vm.network :forwarded_port, guest: 80, host: 8080
+  # https://github.com/Varying-Vagrant-Vagrants/VVV/issues/263#issuecomment-36492020
+
+  #config.vm.network :public_network
+  # https://github.com/Varying-Vagrant-Vagrants/VVV/issues/442#issue-42059056
+
+
+
+
+  # Make bitbucket and github avaiable via VM
+  # https://github.com/Varying-Vagrant-Vagrants/VVV/issues/360#issuecomment-51645545
+  #config.ssh.username = "carstenbach"
+  #config.ssh.private_key_path = [ "F:\\Users\\caba\\.vagrant.d\\insecure_private_key", "F:\\Users\\caba\\.ssh\\id_rsa.pub" ]
+  config.ssh.private_key_path = [ '~/.vagrant.d/insecure_private_key', '~/.ssh/id_rsa' ]
+
+  
+  #config.vm.provision :shell, :inline => "echo -e '#{File.read("#{Dir.home}/.ssh/id_rsa")}' > 'F:\\Users\\caba\\.ssh\\id_rsa'"
+  #config.vm.provision :shell, :inline => "echo -e '#{File.read("#{Dir.home}/.ssh/id_rsa.pub")}' > 'F:\\Users\\caba\\.ssh\\id_rsa.pub'"
+  
+
+  # https://github.com/DSpace/vagrant-dspace/blob/master/Vagrantfile#L105
+  #
+  # Create a forwarded port mapping which allows access to a specific port
+  # within the machine from a port on the host machine. In the example below,
+  # accessing "localhost:8080" will access port 8080 on the VM.
+  config.vm.network :forwarded_port, guest: 80, host: 8080, auto_correct: true
+  #config.vm.network :forwarded_port, guest: 22, host: 1234, auto_correct: true
+
+  # If a port collision occurs (i.e. port 8080 on local machine is in use),
+  # then tell Vagrant to use the next available port between 8081 and 8100
+  #config.vm.usable_port_range = 8081..8100
+
+  # Turn on SSH forwarding (so that 'vagrant ssh' has access to your local SSH keys, and you can use your local SSH keys to access GitHub, etc.)
   config.ssh.forward_agent = true
+
+  # THIS NEXT PART IS TOTAL HACK (only necessary for running Vagrant on Windows)
+  # Windows currently doesn't support SSH Forwarding when running Vagrant's "Provisioning scripts" 
+  # (e.g. all the "config.vm.provision" commands below). Although running "vagrant ssh" (from Windows commandline) 
+  # will work for SSH Forwarding once the VM has started up, "config.vm.provision" commands in this Vagrantfile DO NOT.
+  # Supposedly there's a bug in 'net-ssh' gem (used by Vagrant) which causes SSH forwarding to fail on Windows only
+  # See: https://github.com/mitchellh/vagrant/issues/1735
+  #      https://github.com/mitchellh/vagrant/issues/1404
+  # See also underlying 'net-ssh' bug: https://github.com/net-ssh/net-ssh/issues/55
+  #
+  # Therefore, we have to "hack it" and manually sync our SSH keys to the Vagrant VM & copy them over to the 'root' user account
+  # (as 'root' is the account that runs all Vagrant "config.vm.provision" scripts below). This all means 'root' should be able 
+  # to connect to GitHub as YOU! Once this Windows bug is fixed, we should be able to just remove these lines and everything 
+  # should work via the "config.ssh.forward_agent=true" setting.
+  # ONLY do this hack/workaround if the local OS is Windows.
+  if Vagrant::Util::Platform.windows?
+      # MORE SECURE HACK. You MUST have a ~/.ssh/id_rsa (GitHub specific) SSH key to copy to VM
+      # (ensures we are not just copying all your local SSH keys to a VM)
+      if File.exists?(File.join(Dir.home, ".ssh", "id_rsa"))
+          # Read local machine's GitHub SSH Key (~/.ssh/id_rsa)
+          github_ssh_key = File.read(File.join(Dir.home, ".ssh", "id_rsa"))
+          # Copy it to VM as the /root/.ssh/id_rsa key
+          config.vm.provision :shell, :inline => "echo 'Windows-specific: Copying local GitHub SSH Key to VM for provisioning...' && mkdir -p /root/.ssh && echo '#{github_ssh_key}' > /root/.ssh/id_rsa && chmod 600 /root/.ssh/id_rsa"
+      else
+          # Else, throw a Vagrant Error. Cannot successfully startup on Windows without a GitHub SSH Key!
+          raise Vagrant::Errors::VagrantError, "\n\nERROR: GitHub SSH Key not found at ~/.ssh/id_rsa (required for 'vagrant-dspace' on Windows).\nYou can generate this key manually OR by installing GitHub for Windows (http://windows.github.com/)\n\n"
+      end   
+  end
+
+  ####
+  # Provisioning Scripts
+  #    These scripts run in the order in which they appear, and setup the virtual machine (VM) for us.
+  ####
+
+  # Create a '/etc/sudoers.d/root_ssh_agent' file which ensures sudo keeps any SSH_AUTH_SOCK settings
+  # This allows sudo commands (like "sudo ssh git@github.com") to have access to local SSH keys (via SSH Forwarding)
+  # See: https://github.com/mitchellh/vagrant/issues/1303
+  config.vm.provision :shell do |shell|
+      shell.inline = "touch $1 && chmod 0440 $1 && echo $2 > $1"
+      shell.args = %q{/etc/sudoers.d/root_ssh_agent "Defaults    env_keep += \"SSH_AUTH_SOCK\""}
+  end
+
+  # Turn off annoying console bells/beeps in Ubuntu (only if not already turned off in /etc/inputrc)
+  config.vm.provision :shell, :inline => "grep '^set bell-style none' /etc/inputrc || echo 'set bell-style none' >> /etc/inputrc"
+
+
 
   # Default Ubuntu Box
   #
@@ -29,7 +125,7 @@ Vagrant.configure("2") do |config|
   config.vm.box = "precise32"
   config.vm.box_url = "http://files.vagrantup.com/precise32.box"
 
-  config.vm.hostname = "vvv"
+  config.vm.hostname = "vvv-Apache"
 
   # Local Machine Hosts
   #
@@ -70,16 +166,8 @@ Vagrant.configure("2") do |config|
 
   end
 
-  # Default Box IP Address
-  #
-  # This is the IP address that your host will communicate to the guest through. In the
-  # case of the default `192.168.50.4` that we've provided, VirtualBox will setup another
-  # network adapter on your host machine with the IP `192.168.50.1` as a gateway.
-  #
-  # If you are already on a network using the 192.168.50.x subnet, this should be changed.
-  # If you are running more than one VM through VirtualBox, different subnets should be used
-  # for those as well. This includes other Vagrant boxes.
-  config.vm.network :private_network, ip: "192.168.50.4"
+
+
 
   # Drive mapping
   #

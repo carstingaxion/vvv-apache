@@ -447,7 +447,7 @@ if [[ $ping_result == *bytes?from* ]]; then
 	if [[ ! -d /srv/www/wordpress-default ]]; then
 		echo "Downloading WordPress Stable, see http://wordpress.org/"
 		cd /srv/www/
-		curl -O http://wordpress.org/latest.tar.gz
+		curl -O -L http://wordpress.org/latest.tar.gz
 		tar -xvf latest.tar.gz
 		mv wordpress wordpress-default
 		rm latest.tar.gz
@@ -523,8 +523,34 @@ PHP
 		echo "PHPMyAdmin already installed."
 	fi
 	cp /srv/config/phpmyadmin-config/config.inc.php /srv/www/default/database-admin/
+
+	# Add VVV-Dashboard
+	if [[ ! -f /srv/www/default/style.css ]]; then
+		echo "Installing VVV-Dashboard ..."
+		cd /srv/www/default
+		git clone git://github.com/topdown/VVV-Dashboard.git vvv-dashboard
+		sed "s@../dashboard@vvv-dashboard@g" /srv/www/default/vvv-dashboard/dashboard-custom.php >> /srv/www/default/dashboard-custom.php
+		cp /srv/www/default/vvv-dashboard/style.css /srv/www/default/style.css
+	else
+		echo "VVV-Dashboard already installed."
+	fi
+	
+
 else
 	echo -e "\nNo network available, skipping network installations"
+fi
+
+# Make bitbucket and github avaiable via VM
+# https://github.com/Varying-Vagrant-Vagrants/VVV/issues/360#issuecomment-51645545
+# add github to the list of known_hosts
+# see http://rshestakov.wordpress.com/2014/01/26/how-to-make-vagrant-and-puppet-to-clone-private-github-repo/
+if [[ ! -d /root/.ssh ]]; then
+  echo "Adding bitbucket.org to known_hosts ..."
+  mkdir /root/.ssh
+  #touch /root/.ssh/known_hosts && ssh-keyscan -H github.com >> /root/.ssh/known_hosts
+  touch /root/.ssh/known_hosts && ssh-keyscan -H bitbucket.org >> /root/.ssh/known_hosts
+
+  chmod 600 /root/.ssh/known_hosts
 fi
 
 
@@ -535,6 +561,20 @@ for SITE_CONFIG_FILE in $(find /srv/www -maxdepth 5 -name 'vvv-init.sh'); do
 		cd $DIR
 		bash vvv-init.sh
 	)
+done
+
+# https://github.com/julykaz/vvv-apache/commit/9ca62d2b6ff6d75bfb9925252a38d4374d92d80e
+# Look for Apache vhost files, symlink them into the custom sites dir
+for SITE_CONFIG_FILE in $(find /srv/www -maxdepth 5 -name 'vvv-apache.conf'); do
+	DEST_CONFIG_FILE=${SITE_CONFIG_FILE//\/srv\/www\//}
+	DEST_CONFIG_FILE=${DEST_CONFIG_FILE//\//\-}
+	DEST_CONFIG_FILE=${DEST_CONFIG_FILE/%-vvv-apache.conf/}
+	DEST_CONFIG_FILE="vvv-auto-$DEST_CONFIG_FILE-$(md5sum <<< $SITE_CONFIG_FILE | cut -c1-32).conf"
+	# We allow the replacement of the {vvv_path_to_folder} token with
+	# whatever you want, allowing flexible placement of the site folder
+	# while still having an Apache config which works.
+	DIR="$(dirname $SITE_CONFIG_FILE)"
+	sed "s#{vvv_path_to_folder}#$DIR#" $SITE_CONFIG_FILE > /etc/apache2/custom-sites/$DEST_CONFIG_FILE
 done
 
 # RESTART SERVICES AGAIN
@@ -563,6 +603,8 @@ while read hostfile; do
 		fi
 	done < $hostfile
 done
+
+
 
 end_seconds="$(date +%s)"
 echo "-----------------------------"
