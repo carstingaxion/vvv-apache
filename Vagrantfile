@@ -13,9 +13,17 @@ Vagrant.configure("2") do |config|
   # Configurations from 1.0.x can be placed in Vagrant 1.1.x specs like the following.
   config.vm.provider :virtualbox do |v|
     v.customize ["modifyvm", :id, "--memory", 1024]
-
+    
+    # https://www.virtualbox.org/manual/ch08.html#idp57572192
+    # http://serverfault.com/a/453260/226995
     v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-    v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]    
+    v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]  
+
+    #v.gui = true
+    #v.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
+    #v.customize ["modifyvm", :id, "--draganddrop", "bidirectional"]
+
+
   end
 
   # Forward Agent
@@ -23,6 +31,12 @@ Vagrant.configure("2") do |config|
   # Enable agent forwarding on vagrant ssh commands. This allows you to use identities
   # established on the host machine inside the guest. See the manual for ssh-add
   config.ssh.forward_agent = true
+
+  # http://stackoverflow.com/a/25758738/585690
+  #config.ssh.username = 'root'
+  #config.ssh.password = 'vagrant'
+  #config.ssh.insert_key = 'true'  
+
 
   # Default Ubuntu Box
   #
@@ -84,13 +98,14 @@ Vagrant.configure("2") do |config|
   # for those as well. This includes other Vagrant boxes.
   
   # default
-  config.vm.network :private_network, ip: "192.168.50.4"
+  #config.vm.network :private_network, ip: "192.168.50.4"
 
   #
   # https://github.com/Varying-Vagrant-Vagrants/VVV/issues/442#issue-42059056
   #config.vm.network :public_network
   
-  #config.vm.network :public_network, :bridge=>"Dell Wireless 1703 802.11b/g/n (2.4GHz)"
+  #config.vm.network :public_network, :bridge=>"Dell Wireless 1703 802.11b/g/n (2.4GHz)", ip: "192.168.2.999"
+  config.vm.network :public_network, :bridge=>"Dell Wireless 1703 802.11b/g/n (2.4GHz)"
 
   #config.vm.network "public_network", ip: "192.168.2.333"
 
@@ -104,15 +119,15 @@ Vagrant.configure("2") do |config|
   # https://github.com/Varying-Vagrant-Vagrants/VVV/issues/360#issuecomment-51645545
   #config.ssh.username = "carstenbach"
   #config.ssh.private_key_path = [ "F:\\Users\\caba\\.vagrant.d\\insecure_private_key", "F:\\Users\\caba\\.ssh\\id_rsa.pub" ]
-  config.ssh.private_key_path = [ '~/.vagrant.d/insecure_private_key', '~/.ssh/id_rsa', '~/.ssh/github_rsa' ]
+  config.ssh.private_key_path = [ '~/.vagrant.d/insecure_private_key' ]
+  #config.ssh.private_key_path = [ '~/.vagrant.d/insecure_private_key', '~/.ssh/id_rsa', '~/.ssh/github_rsa' ]
 
   
   #config.vm.provision :shell, :inline => "echo -e '#{File.read("#{Dir.home}/.ssh/id_rsa")}' > 'F:\\Users\\caba\\.ssh\\id_rsa'"
   #config.vm.provision :shell, :inline => "echo -e '#{File.read("#{Dir.home}/.ssh/id_rsa.pub")}' > 'F:\\Users\\caba\\.ssh\\id_rsa.pub'"
   
 
-  # https://github.com/DSpace/vagrant-dspace/blob/master/Vagrantfile#L105
-  #
+
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 8080 on the VM.
@@ -120,14 +135,16 @@ Vagrant.configure("2") do |config|
   # https://github.com/Varying-Vagrant-Vagrants/VVV/issues/263#issuecomment-36492020
 
   config.vm.network :forwarded_port, guest: 80, host: 8080, auto_correct: true
-  config.vm.network :forwarded_port, guest: 22, host: 1234, auto_correct: true
+  #config.vm.network :forwarded_port, guest: 22, host: 1234, auto_correct: true
+  #config.vm.network :forwarded_port, guest: 52698, host: 52698, auto_correct: true
 
   # If a port collision occurs (i.e. port 8080 on local machine is in use),
   # then tell Vagrant to use the next available port between 8081 and 8100
   #config.vm.usable_port_range = 8081..8100
 
 
-
+  # https://github.com/DSpace/vagrant-dspace/blob/master/Vagrantfile#L105
+  #
   # THIS NEXT PART IS TOTAL HACK (only necessary for running Vagrant on Windows)
   # Windows currently doesn't support SSH Forwarding when running Vagrant's "Provisioning scripts" 
   # (e.g. all the "config.vm.provision" commands below). Although running "vagrant ssh" (from Windows commandline) 

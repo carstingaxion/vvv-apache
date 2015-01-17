@@ -254,7 +254,7 @@ else
 	echo -e "\nNo network connection available, skipping package installation"
 fi
 
-#echo -e "\nSetup configuration files..."
+echo -e "\nSetup configuration files..."
 
 # Unlink all previous symlinked config files. This allows us to avoid errors
 # as we proceed to copy over new versions of these config files. It is likely
@@ -534,24 +534,27 @@ PHP
 	else
 		echo "VVV-Dashboard already installed."
 	fi
-	
+
+
+	# Make bitbucket and github avaiable via VM
+	# https://github.com/Varying-Vagrant-Vagrants/VVV/issues/360#issuecomment-51645545
+	# add github to the list of known_hosts
+	# see http://rshestakov.wordpress.com/2014/01/26/how-to-make-vagrant-and-puppet-to-clone-private-github-repo/
+	if [[ ! -d /root/.ssh ]]; then
+	  echo "Adding bitbucket.org and github.com to known_hosts ..."
+	  mkdir /root/.ssh
+	  touch /root/.ssh/known_hosts && ssh-keyscan -H ssh.github.com >> /root/.ssh/known_hosts
+	  touch /root/.ssh/known_hosts && ssh-keyscan -H bitbucket.org >> /root/.ssh/known_hosts
+
+	  chmod 600 /root/.ssh/known_hosts
+	fi
+
 
 else
 	echo -e "\nNo network available, skipping network installations"
 fi
 
-# Make bitbucket and github avaiable via VM
-# https://github.com/Varying-Vagrant-Vagrants/VVV/issues/360#issuecomment-51645545
-# add github to the list of known_hosts
-# see http://rshestakov.wordpress.com/2014/01/26/how-to-make-vagrant-and-puppet-to-clone-private-github-repo/
-if [[ ! -d /root/.ssh ]]; then
-  echo "Adding bitbucket.org to known_hosts ..."
-  mkdir /root/.ssh
-  #touch /root/.ssh/known_hosts && ssh-keyscan -H github.com >> /root/.ssh/known_hosts
-  touch /root/.ssh/known_hosts && ssh-keyscan -H bitbucket.org >> /root/.ssh/known_hosts
 
-  chmod 600 /root/.ssh/known_hosts
-fi
 
 
 # Look for site setup scripts
@@ -592,7 +595,7 @@ echo "Cleaning the virtual machine's /etc/hosts file..."
 sed -n '/# vvv-auto$/!p' /etc/hosts > /tmp/hosts
 mv /tmp/hosts /etc/hosts
 echo "Adding domains to the virtual machine's /etc/hosts file..."
-find /srv/www/ -maxdepth 5 -name 'vvv-hosts' | \
+find /srv/www/ -maxdepth 5 -name 'vvv-hosts' | -exec dos2unix {} \
 while read hostfile; do
 	while IFS='' read -r line || [ -n "$line" ]; do
 		if [[ "#" != ${line:0:1} ]]; then

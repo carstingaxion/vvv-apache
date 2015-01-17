@@ -1,0 +1,30 @@
+Jan 14 03:47:26 vvv-apache postfix/master[2875]: daemon started -- version 2.9.6, configuration /etc/postfix
+Jan 14 03:51:49 vvv-apache postfix/master[2970]: daemon started -- version 2.9.6, configuration /etc/postfix
+Jan 14 04:33:29 vvv-apache postfix/master[2915]: daemon started -- version 2.9.6, configuration /etc/postfix
+Jan 14 04:38:29 vvv-apache postfix/qmgr[2919]: 196654813FA: from=<root@vvv>, size=971, nrcpt=1 (queue active)
+Jan 14 04:38:29 vvv-apache postfix/qmgr[2919]: 1ED64481212: from=<root@vvv>, size=971, nrcpt=1 (queue active)
+Jan 14 04:38:29 vvv-apache postfix/qmgr[2919]: 3B6A84814E9: from=<root@vvv>, size=971, nrcpt=1 (queue active)
+Jan 14 04:38:29 vvv-apache postfix/qmgr[2919]: BBB6A48122D: from=<root@vvv>, size=971, nrcpt=1 (queue active)
+Jan 14 04:38:29 vvv-apache postfix/qmgr[2919]: B322C4811AB: from=<root@vvv>, size=971, nrcpt=1 (queue active)
+Jan 14 04:38:29 vvv-apache postfix/qmgr[2919]: DF68A481476: from=<root@vvv>, size=971, nrcpt=1 (queue active)
+Jan 14 04:38:29 vvv-apache postfix/qmgr[2919]: D0C344813FB: from=<root@vvv>, size=971, nrcpt=1 (queue active)
+Jan 14 04:38:29 vvv-apache postfix/qmgr[2919]: 6C0B948122F: from=<root@vvv>, size=971, nrcpt=1 (queue active)
+Jan 14 04:38:29 vvv-apache postfix/qmgr[2919]: 87197481465: from=<root@vvv>, size=971, nrcpt=1 (queue active)
+Jan 14 04:38:29 vvv-apache postfix/qmgr[2919]: 029B748120C: from=<root@vvv>, size=971, nrcpt=1 (queue active)
+Jan 14 04:38:29 vvv-apache postfix/qmgr[2919]: 07E6448120F: from=<root@vvv>, size=971, nrcpt=1 (queue active)
+Jan 14 04:38:59 vvv-apache postfix/smtp[3196]: connect to carsten-bach.de[91.198.250.84]:25: Connection timed out
+Jan 14 04:38:59 vvv-apache postfix/smtp[3195]: connect to carsten-bach.de[91.198.250.84]:25: Connection timed out
+Jan 14 04:38:59 vvv-apache postfix/smtp[3194]: connect to carsten-bach.de[91.198.250.84]:25: Connection timed out
+Jan 14 04:38:59 vvv-apache postfix/smtp[3193]: connect to carsten-bach.de[91.198.250.84]:25: Connection timed out
+Jan 14 04:38:59 vvv-apache postfix/smtp[3197]: connect to carsten-bach.de[91.198.250.84]:25: Connection timed out
+Jan 14 04:38:59 vvv-apache postfix/smtp[3196]: BBB6A48122D: to=<mail@carsten-bach.de>, relay=none, delay=303149, delays=303119/0.02/30/0, dsn=4.4.1, status=deferred (connect to carsten-bach.de[91.198.250.84]:25: Connection timed out)
+Jan 14 04:38:59 vvv-apache postfix/smtp[3194]: 1ED64481212: to=<mail@carsten-bach.de>, relay=none, delay=32663, delays=32633/0.02/30/0, dsn=4.4.1, status=deferred (connect to carsten-bach.de[91.198.250.84]:25: Connection timed out)
+Jan 14 04:38:59 vvv-apache postfix/smtp[3195]: 3B6A84814E9: to=<mail@carsten-bach.de>, relay=none, delay=310338, delays=310308/0.02/30/0, dsn=4.4.1, status=deferred (connect to carsten-bach.de[91.198.250.84]:25: Connection timed out)
+Jan 14 04:38:59 vvv-apache postfix/smtp[3193]: 196654813FA: to=<mail@carsten-bach.de>, relay=none, delay=267799, delays=267769/0.03/30/0, dsn=4.4.1, status=deferred (connect to carsten-bach.de[91.198.250.84]:25: Connection timed out)
+Jan 14 04:38:59 vvv-apache postfix/smtp[3197]: B322C4811AB: to=<mail@carsten-bach.de>, relay=none, delay=160662, delays=160632/0.01/30/0, dsn=4.4.1, status=deferred (connect to carsten-bach.de[91.198.250.84]:25: Connection timed out)
+Jan 14 04:38:59 vvv-apache postfix/error[3203]: D0C344813FB: to=<mail@carsten-bach.de>, relay=none, delay=267071, delays=267041/30/0/0, dsn=4.4.1, status=deferred (delivery temporarily suspended: connect to carsten-bach.de[91.198.250.84]:25: Connection timed out)
+Jan 14 04:38:59 vvv-apache postfix/error[3202]: DF68A481476: to=<mail@carsten-bach.de>, relay=none, delay=266656, delays=266625/30/0/0.01, dsn=4.4.1, status=deferred (delivery temporarily suspended: connect to carsten-bach.de[91.198.250.84]:25: Connection timed out)
+Jan 14 04:38:59 vvv-apache postfix/error[3204]: 029B748120C: to=<mail@carsten-bach.de>, relay=none, delay=40187, delays=40157/30/0/0.01, dsn=4.4.1, status=deferred (delivery temporarily suspended: connect to carsten-bach.de[91.198.250.84]:25: Connection timed out)
+Jan 14 04:38:59 vvv-apache postfix/error[3202]: 87197481465: to=<mail@carsten-bach.de>, relay=none, delay=188642, delays=188612/30/0/0.01, dsn=4.4.1, status=deferred (delivery temporarily suspended: connect to carsten-bach.de[91.198.250.84]:25: Connection timed out)
+Jan 14 04:38:59 vvv-apache postfix/error[3203]: 6C0B948122F: to=<mail@carsten-bach.de>, relay=none, delay=182153, delays=182123/30/0/0.01, dsn=4.4.1, status=deferred (delivery temporarily suspended: connect to carsten-bach.de[91.198.250.84]:25: Connection timed out)
+Jan 14 04:38:59 vvv-apache postfix/error[3205]: 07E6448120F: to=<mail@carsten-bach.de>, relay=none, delay=39673, delays=39643/30/0/0.01, dsn=4.4.1, status=deferred (delivery temporarily suspended: connect to carsten-bach.de[91.198.250.84]:25: Connection timed out)

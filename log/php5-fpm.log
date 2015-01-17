@@ -1,0 +1,56 @@
+[14-Jan-2015 03:45:56] NOTICE: fpm is running, pid 2006
+[14-Jan-2015 03:45:56] NOTICE: ready to handle connections
+[14-Jan-2015 03:47:26] NOTICE: configuration file /etc/php5/fpm/php-fpm.conf test is successful
+
+[14-Jan-2015 03:49:25] NOTICE: Finishing ...
+[14-Jan-2015 03:49:25] NOTICE: exiting, bye-bye!
+[14-Jan-2015 03:50:24] NOTICE: fpm is running, pid 1983
+[14-Jan-2015 03:50:24] NOTICE: ready to handle connections
+[14-Jan-2015 03:51:49] NOTICE: configuration file /etc/php5/fpm/php-fpm.conf test is successful
+
+[14-Jan-2015 04:22:52] NOTICE: Finishing ...
+[14-Jan-2015 04:22:52] NOTICE: exiting, bye-bye!
+[14-Jan-2015 04:23:45] NOTICE: fpm is running, pid 1971
+[14-Jan-2015 04:23:45] NOTICE: ready to handle connections
+[14-Jan-2015 04:24:52] WARNING: [pool www] child 1972 exited on signal 15 (SIGTERM) after 66.855418 seconds from start
+[14-Jan-2015 04:24:52] NOTICE: [pool www] child 2728 started
+[14-Jan-2015 04:24:52] WARNING: [pool www] child 1973 exited on signal 15 (SIGTERM) after 66.855836 seconds from start
+[14-Jan-2015 04:24:52] NOTICE: [pool www] child 2729 started
+[14-Jan-2015 04:24:52] NOTICE: Terminating ...
+[14-Jan-2015 04:24:52] NOTICE: exiting, bye-bye!
+[14-Jan-2015 04:32:06] NOTICE: fpm is running, pid 2051
+[14-Jan-2015 04:32:06] NOTICE: ready to handle connections
+[14-Jan-2015 04:33:29] NOTICE: configuration file /etc/php5/fpm/php-fpm.conf test is successful
+
+[14-Jan-2015 04:45:25] NOTICE: Finishing ...
+[14-Jan-2015 04:45:25] NOTICE: exiting, bye-bye!
+[14-Jan-2015 04:51:31] NOTICE: fpm is running, pid 1983
+[14-Jan-2015 04:51:31] NOTICE: ready to handle connections
+[14-Jan-2015 04:52:56] NOTICE: configuration file /etc/php5/fpm/php-fpm.conf test is successful
+
+[14-Jan-2015 05:09:40] NOTICE: Finishing ...
+[14-Jan-2015 05:09:40] NOTICE: exiting, bye-bye!
+[14-Jan-2015 05:10:34] NOTICE: fpm is running, pid 2015
+[14-Jan-2015 05:10:34] NOTICE: ready to handle connections
+[14-Jan-2015 05:12:02] NOTICE: configuration file /etc/php5/fpm/php-fpm.conf test is successful
+
+[14-Jan-2015 05:14:52] NOTICE: Finishing ...
+[14-Jan-2015 05:14:52] NOTICE: exiting, bye-bye!
+[14-Jan-2015 05:15:43] NOTICE: fpm is running, pid 2035
+[14-Jan-2015 05:15:43] NOTICE: ready to handle connections
+[14-Jan-2015 05:17:15] NOTICE: configuration file /etc/php5/fpm/php-fpm.conf test is successful
+
+[14-Jan-2015 05:17:22] NOTICE: Finishing ...
+[14-Jan-2015 05:17:22] NOTICE: exiting, bye-bye!
+[14-Jan-2015 05:18:11] NOTICE: fpm is running, pid 2012
+[14-Jan-2015 05:18:11] NOTICE: ready to handle connections
+[14-Jan-2015 05:19:44] NOTICE: configuration file /etc/php5/fpm/php-fpm.conf test is successful
+
+[14-Jan-2015 05:20:35] NOTICE: Finishing ...
+[14-Jan-2015 05:20:35] NOTICE: exiting, bye-bye!
+[14-Jan-2015 05:21:25] NOTICE: fpm is running, pid 1990
+[14-Jan-2015 05:21:25] NOTICE: ready to handle connections
+[14-Jan-2015 05:22:57] NOTICE: configuration file /etc/php5/fpm/php-fpm.conf test is successful
+
+[14-Jan-2015 05:26:34] NOTICE: Finishing ...
+[14-Jan-2015 05:26:34] NOTICE: exiting, bye-bye!

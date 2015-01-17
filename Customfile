@@ -1,0 +1,36 @@
+
+  # /srv/log/
+  #
+  # If a log directory exists in the same directory as your Vagrantfile, a mapped
+  # directory inside the VM will be created for some generated log files.
+  #config.vm.synced_folder "log/", "/var/log", :owner => "www-data"
+
+#  if vagrant_version >= "1.3.0"
+#    config.vm.synced_folder "log/", "/var/log/", 
+#      :owner => "www-data",
+#      :group => "www-data",
+#      :mount_options => ["dmode=775,fmode=774"]
+#  else
+#    config.vm.synced_folder "log/", "/var/log/", :owner => "root", :extra => 'dmode=755,fmode=664'
+#  end
+
+  # Vagrant Triggers
+  #
+  # If the vagrant-triggers plugin is installed, we can run various scripts on Vagrant
+  # state changes like `vagrant up`, `vagrant halt`, `vagrant suspend`, and `vagrant destroy`
+  #
+  # These scripts are run on the host machine, so we use `vagrant ssh` to tunnel back
+  # into the VM and execute things. By default, each of these scripts calls db_backup
+  # to create backups of all current databases. This can be overridden with custom
+  # scripting. See the individual files in config/homebin/ for details.
+  if defined? VagrantPlugins::Triggers
+    config.trigger.before :halt, :stdout => true do
+      run "vagrant ssh -c 'vagrant_halt'"
+    end
+    config.trigger.before :suspend, :stdout => true do
+      run "vagrant ssh -c 'vagrant_suspend'"
+    end
+    config.trigger.before :destroy, :stdout => true do
+      run "vagrant ssh -c 'vagrant_destroy'"
+    end
+  end
