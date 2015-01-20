@@ -468,6 +468,7 @@ PHP
 		echo "Checking out WordPress trunk from core.svn, see http://core.svn.wordpress.org/trunk"
 		svn checkout http://core.svn.wordpress.org/trunk/ /srv/www/wordpress-trunk
 		cd /srv/www/wordpress-trunk
+		svn cleanup
 		echo "Configuring WordPress trunk..."
 		wp core config --allow-root --dbname=wordpress_trunk --dbuser=wp --dbpass=wp --quiet --extra-php <<PHP
 define( 'WP_DEBUG', true );
@@ -476,6 +477,7 @@ PHP
 	else
 		echo "Updating WordPress trunk..."
 		cd /srv/www/wordpress-trunk
+		svn cleanup
 		svn up --ignore-externals
 	fi
 
@@ -483,6 +485,7 @@ PHP
 	if [[ ! -d /srv/www/wordpress-develop ]]; then
 		echo "Checking out WordPress trunk from develop.svn, see http://develop.svn.wordpress.org/trunk"
 		svn checkout http://develop.svn.wordpress.org/trunk/ /srv/www/wordpress-develop
+		svn cleanup
 		cd /srv/www/wordpress-develop/src/
 		echo "Configuring WordPress develop..."
 		wp core config --allow-root --dbname=wordpress_develop --dbuser=wp --dbpass=wp --quiet --extra-php <<PHP
@@ -502,6 +505,7 @@ PHP
 		echo "Updating WordPress develop..."
 		cd /srv/www/wordpress-develop/
 		svn up
+		svn cleanup
 		npm install &>/dev/null
 	fi
 
@@ -595,7 +599,7 @@ echo "Cleaning the virtual machine's /etc/hosts file..."
 sed -n '/# vvv-auto$/!p' /etc/hosts > /tmp/hosts
 mv /tmp/hosts /etc/hosts
 echo "Adding domains to the virtual machine's /etc/hosts file..."
-find /srv/www/ -maxdepth 5 -name 'vvv-hosts' | -exec dos2unix {} \
+find /srv/www/ -maxdepth 5 -name 'vvv-hosts' | \
 while read hostfile; do
 	while IFS='' read -r line || [ -n "$line" ]; do
 		if [[ "#" != ${line:0:1} ]]; then
